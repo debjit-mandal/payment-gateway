@@ -16,7 +16,7 @@ This is a basic payment integration using Stripe's Python SDK.
 
         pip install Flask stripe python-dotenv
 
-**In the** ``.env`` **file please replace the** ``SECRET_KEY`` **with your Stripe Secret Key and** ``PUBLISHABLE_KEY`` **with your Stripe Publishable Key. These can be found in the Stripe Dashboard.**
+**In the** ``.env`` **file please replace the** ``STRIPE_SECRET_KEY`` **with your Stripe Secret Key and** ``STRIPE_PUBLISHABLE_KEY`` **with your Stripe Publishable Key. These can be found in the Stripe Dashboard.**
 
 * **To run the code locally**:
 
