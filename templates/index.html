@@ -5,67 +5,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Debjit's Payment Gateway</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <script src="https://js.stripe.com/v3/"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Poppins', sans-serif;
+            background-image: linear-gradient(to right, #6a11cb, #2575fc);
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            color: #333;
         }
 
         form {
-            background: #fff;
-            padding: 20px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            width: 80%;
-            max-width: 500px;
+            background: #ffffffee;
+            /* slight transparency to let the gradient show through */
+            padding: 20px 40px;
+            box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
         }
 
         label {
             display: block;
+            font-weight: 600;
             margin-bottom: 6px;
         }
 
         input[type="number"],
         input[type="text"],
         select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
+            width: 95%;
+            padding: 10px 15px;
+            margin-bottom: 20px;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 6px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="number"]:hover,
+        input[type="text"]:hover,
+        select:hover {
+            border-color: #6a11cb;
         }
 
         button {
-            padding: 10px 15px;
-            background-color: #333;
+            display: block;
+            width: 100%;
+            padding: 18px 0;
+            background-color: rgb(120, 101, 244);
             color: #fff;
-            border: none;
-            border-radius: 4px;
+            border: 2px solid #ffffff;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.4s ease;
+            font-weight: 600;
+            font-size: 20px;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        button:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background-color: #ffffff;
+            z-index: -1;
+            transition: width 0.4s;
+            border-radius: inherit;
         }
 
         button:hover {
-            background-color: #555;
+            color: #6a11cb;
         }
 
+        button:hover:before {
+            width: 100%;
+        }
+
+
+
         #card-element {
-            margin-bottom: 10px;
-            padding: 10px;
+            margin-bottom: 20px;
+            padding: 10px 15px;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 6px;
+        }
+
+        #card-element:hover {
+            border-color: #6a11cb;
         }
 
         #card-errors {
             color: red;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+            height: 20px;
+            /* to ensure consistent spacing even when there's no error */
         }
 
         .hidden {
@@ -77,6 +129,32 @@
             vertical-align: middle;
             padding-right: 12px;
         }
+
+        /* Chrome, Firefox, and Opera */
+        ::-webkit-input-placeholder {
+            color: #b3b3b3;
+            /* Light grey color */
+            font-weight: 400;
+            /* Regular font weight */
+        }
+
+        /* Internet Explorer */
+        :-ms-input-placeholder {
+            color: #b3b3b3;
+            font-weight: 400;
+        }
+
+        /* Microsoft Edge */
+        ::-ms-input-placeholder {
+            color: #b3b3b3;
+            font-weight: 400;
+        }
+
+        /* Safari */
+        ::placeholder {
+            color: #b3b3b3;
+            font-weight: 400;
+        }
     </style>
 </head>
 
@@ -85,7 +163,7 @@
     <form action="/charge" method="post" id="payment-form">
         <div>
             <label for="amount">Amount:</label>
-            <input type="number" name="amount" id="amount" required>
+            <input type="number" name="amount" placeholder="Enter the amount" id="amount" required>
         </div>
         <div>
             <label for="currency">Currency:</label>
@@ -96,7 +174,7 @@
         </div>
         <div>
             <label for="description">Description:</label>
-            <input type="text" name="description" id="description" required>
+            <input type="text" name="description" placeholder="Enter the purpose" id="description" required>
         </div>
         <div class="form-row">
             <label for="card-element">
