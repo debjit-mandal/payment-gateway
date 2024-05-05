@@ -1,11 +1,18 @@
 from flask import Flask, jsonify, request, render_template
-from dotenv import load_dotenv
 import os
 import stripe
+import logging
+from dotenv import load_dotenv
 
 load_dotenv()
 
 app = Flask(__name__)
+
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['REMEMBER_COOKIE_SECURE'] = True
 
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
@@ -30,11 +37,16 @@ def create_charge():
             source=token
         )
 
+        logging.info(f"Charge successful for {amount} {currency}")
         return jsonify(message="Payment completed successfully"), 200
 
+    except stripe.error.CardError as e:
+        logging.error(f"Card error: {e.error.message}")
+        return jsonify(message=str(e.error.message)), 400
     except Exception as e:
+        logging.error(f"An error occurred: {str(e)}")
         return jsonify(message=str(e)), 400
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=8080)
